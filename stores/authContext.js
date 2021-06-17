@@ -30,9 +30,17 @@ export const AuthContextProvider = (props) => {
       console.log("login event");
     });
 
+    // logout
     netlifyIdentity.on("logout", () => {
       setUser(null);
       console.log("logout event");
+    });
+
+    // check, if Netlify checked if a user is logged in - useful if logged user will refresh the page
+    netlifyIdentity.on("init", (user) => {
+      setUser(user);
+      setAuthReady(true);
+      console.log("init event");
     });
 
     //init netlify identity connection - it opens modal

@@ -12,13 +12,31 @@ export const AuthContextProvider = (props) => {
   const { children } = props;
 
   const [user, setUser] = useState(null);
+  const [authReady, setAuthReady] = useState(false);
+
+  const login = () => {
+    netlifyIdentity.open();
+  };
+
+  const logout = () => {};
 
   useEffect(() => {
-    //init netlify identity connection
+    // it is looking for a users
+    netlifyIdentity.on("login", (user) => {
+      setUser(user);
+      netlifyIdentity.close();
+      console.log("login event");
+    });
+
+    //init netlify identity connection - it opens modal
     netlifyIdentity.init();
   }, []);
 
-  return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
+  const context = { user, login, logout, authReady };
+
+  return (
+    <AuthContext.Provider value={context}>{children}</AuthContext.Provider>
+  );
 };
 
 export default AuthContext;

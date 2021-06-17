@@ -18,7 +18,9 @@ export const AuthContextProvider = (props) => {
     netlifyIdentity.open();
   };
 
-  const logout = () => {};
+  const logout = () => {
+    netlifyIdentity.logout();
+  };
 
   useEffect(() => {
     // it is looking for a users
@@ -28,8 +30,19 @@ export const AuthContextProvider = (props) => {
       console.log("login event");
     });
 
+    netlifyIdentity.on("logout", () => {
+      setUser(null);
+      console.log("logout event");
+    });
+
     //init netlify identity connection - it opens modal
     netlifyIdentity.init();
+
+    return () => {
+      // cleaning events
+      netlifyIdentity.off("login");
+      netlifyIdentity.off("logout");
+    };
   }, []);
 
   const context = { user, login, logout, authReady };

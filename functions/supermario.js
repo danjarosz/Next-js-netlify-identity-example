@@ -10,6 +10,6 @@ exports.handler = async () => {
   // return response to browser
   return {
     statusCode: 200,
-    data: JSON.stringify(data),
+    body: JSON.stringify(data),
   };
 };
